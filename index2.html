@@ -1,0 +1,520 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Anthropic Sans",sans-serif}
+:root{
+  --bg:#F8F8FB;--bg2:#FFFFFF;--bg3:#EEEEF4;
+  --text:#1A1A2E;--text2:#5A5A72;--text3:#8A8AA8;
+  --blue:#000060;--blue2:#3460FB;--blue3:#E6EFFF;
+  --green:#197A4B;--green2:#E6F4ED;
+  --red:#FE3939;--red2:#FFF0F0;
+  --amber:#A58000;--amber2:#FFF8E6;
+  --gray:#73726C;--border:rgba(0,0,96,0.12);
+  --radius:8px;--radius-lg:12px;
+}
+.portal{background:var(--bg);min-height:600px;padding:16px;font-size:14px;color:var(--text)}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding:10px 14px;background:var(--bg2);border-radius:var(--radius-lg);border:0.5px solid var(--border)}
+.logo{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--blue)}
+.logo-mark{width:28px;height:28px;background:var(--blue);border-radius:6px;display:flex;align-items:center;justify-content:center}
+.logo-mark svg{width:16px;height:16px}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.badge-cert{font-size:11px;font-weight:500;padding:3px 8px;border-radius:20px;border:0.5px solid var(--blue);color:var(--blue);background:var(--blue3)}
+.tab-bar{display:flex;gap:2px;margin-bottom:14px;background:var(--bg3);border-radius:var(--radius);padding:3px}
+.tab{padding:6px 14px;border-radius:6px;font-size:13px;cursor:pointer;color:var(--text2);border:none;background:none;transition:all .15s}
+.tab.active{background:var(--bg2);color:var(--blue);font-weight:500;box-shadow:0 1px 3px rgba(0,0,96,.08)}
+.filter-row{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.filter-label{font-size:12px;color:var(--text3);white-space:nowrap}
+select{font-size:12px;padding:5px 8px;border:0.5px solid var(--border);border-radius:var(--radius);background:var(--bg2);color:var(--text);cursor:pointer;outline:none}
+select:focus{border-color:var(--blue2)}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.kpi{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:12px 14px;position:relative;overflow:hidden}
+.kpi-label{font-size:11px;color:var(--text3);margin-bottom:4px;display:flex;align-items:center;gap:4px}
+.kpi-val{font-size:22px;font-weight:500;color:var(--text);line-height:1.1}
+.kpi-sub{font-size:11px;color:var(--text3);margin-top:3px}
+.kpi-bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--bg3)}
+.kpi-bar-fill{height:100%;border-radius:0 0 2px 2px;transition:width .6s ease}
+.status-dot{width:7px;height:7px;border-radius:50%;display:inline-block}
+.dot-ok{background:var(--green)}
+.dot-warn{background:var(--amber)}
+.dot-ng{background:var(--red)}
+.dot-gray{background:var(--text3)}
+.section-title{font-size:12px;font-weight:500;color:var(--text2);margin-bottom:8px;display:flex;align-items:center;gap:6px;text-transform:none;letter-spacing:.01em}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px}
+.card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:12px 14px}
+.progress-ring-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 0}
+.ring-label{font-size:11px;color:var(--text3);text-align:center;margin-top:4px}
+.ring-val{font-size:18px;font-weight:500;color:var(--text);text-align:center;line-height:1}
+.audit-table{width:100%;border-collapse:collapse;font-size:12px}
+.audit-table th{text-align:left;padding:7px 8px;color:var(--text3);font-weight:500;border-bottom:0.5px solid var(--border);white-space:nowrap}
+.audit-table td{padding:7px 8px;border-bottom:0.5px solid var(--bg3);color:var(--text);vertical-align:middle}
+.audit-table tr:last-child td{border-bottom:none}
+.audit-table tr:hover td{background:var(--bg);cursor:pointer}
+.badge{font-size:10px;font-weight:500;padding:2px 7px;border-radius:20px;white-space:nowrap;display:inline-flex;align-items:center;gap:3px}
+.badge-ok{background:var(--green2);color:var(--green)}
+.badge-warn{background:var(--amber2);color:var(--amber)}
+.badge-ng{background:var(--red2);color:var(--red)}
+.badge-blue{background:var(--blue3);color:var(--blue)}
+.badge-gray{background:var(--bg3);color:var(--text2)}
+.progress-bar{height:6px;border-radius:3px;background:var(--bg3);margin-top:4px}
+.progress-fill{height:100%;border-radius:3px;transition:width .5s ease}
+.prog-green{background:var(--green)}
+.prog-amber{background:var(--amber)}
+.prog-blue{background:var(--blue2)}
+.prog-red{background:var(--red)}
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text3)}
+.legend-swatch{width:10px;height:10px;border-radius:2px}
+.chart-wrap{position:relative;width:100%;height:160px}
+.finding-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid var(--bg3)}
+.finding-row:last-child{border-bottom:none}
+.finding-type{font-size:11px;font-weight:500;min-width:60px}
+.finding-bar-wrap{flex:1;margin:0 12px}
+.finding-count{font-size:13px;font-weight:500;color:var(--text);min-width:24px;text-align:right}
+.timeline-item{display:flex;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--bg3);font-size:12px}
+.timeline-item:last-child{border-bottom:none}
+.timeline-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px}
+.timeline-date{font-size:11px;color:var(--text3);margin-top:2px}
+.mini-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-top:6px}
+.mini-cell{height:20px;border-radius:4px;font-size:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:500;cursor:pointer;transition:opacity .15s}
+.mini-cell:hover{opacity:.8}
+.page{display:none}
+.page.active{display:block}
+.detail-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.back-btn{font-size:12px;color:var(--blue2);cursor:pointer;border:0.5px solid var(--blue2);border-radius:6px;padding:4px 10px;background:none;display:flex;align-items:center;gap:4px}
+.back-btn:hover{background:var(--blue3)}
+.data-upd{font-size:11px;color:var(--text3);text-align:right}
+</style>
+<div class="portal" role="main">
+<h2 class="sr-only">内部監査管理ポータル — 進捗・統合管理ダッシュボード</h2>
+
+<!-- トップバー -->
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1" fill="#fff"/><rect x="9" y="2" width="5" height="5" rx="1" fill="#fff" opacity=".6"/><rect x="2" y="9" width="5" height="5" rx="1" fill="#fff" opacity=".6"/><rect x="9" y="9" width="5" height="5" rx="1" fill="#fff" opacity=".3"/></svg>
+    </div>
+    内部監査管理ポータル
+  </div>
+  <div class="topbar-right">
+    <span class="badge-cert">ISO 13485</span>
+    <span class="badge-cert">ISO 9001</span>
+    <span style="font-size:11px;color:var(--text3)">更新: 2026-06-12</span>
+  </div>
+</div>
+
+<!-- タブ -->
+<div class="tab-bar">
+  <button class="tab active" onclick="showTab('overview')">概況</button>
+  <button class="tab" onclick="showTab('schedule')">計画・進捗</button>
+  <button class="tab" onclick="showTab('findings')">指摘事項</button>
+  <button class="tab" onclick="showTab('branch')">拠点別</button>
+</div>
+
+<!-- ========== TAB: 概況 ========== -->
+<div id="tab-overview" class="page active">
+
+<!-- フィルター -->
+<div class="filter-row">
+  <span class="filter-label"><i class="ti ti-filter" aria-hidden="true" style="font-size:13px"></i> フィルター:</span>
+  <select><option>2026年度</option><option>2025年度</option></select>
+  <select><option>全規格</option><option>ISO 13485</option><option>ISO 9001</option></select>
+  <select><option>全拠点</option><option>関東エリア</option><option>関西エリア</option><option>九州エリア</option></select>
+</div>
+
+<!-- KPIカード -->
+<div class="kpi-row">
+  <div class="kpi">
+    <div class="kpi-label"><span class="status-dot dot-ok"></span>計画実施率</div>
+    <div class="kpi-val">87%</div>
+    <div class="kpi-sub">実施済 26 / 計画 30件</div>
+    <div class="kpi-bar"><div class="kpi-bar-fill prog-green" style="width:87%"></div></div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label"><span class="status-dot dot-warn"></span>指摘是正完了率</div>
+    <div class="kpi-val">72%</div>
+    <div class="kpi-sub">完了 54 / 総指摘 75件</div>
+    <div class="kpi-bar"><div class="kpi-bar-fill prog-amber" style="width:72%"></div></div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label"><span class="status-dot dot-ng"></span>期限超過件数</div>
+    <div class="kpi-val">8件</div>
+    <div class="kpi-sub">前年比 +2件 ▲</div>
+    <div class="kpi-bar"><div class="kpi-bar-fill prog-red" style="width:28%"></div></div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label"><span class="status-dot dot-gray"></span>未監査拠点数</div>
+    <div class="kpi-val">12拠点</div>
+    <div class="kpi-sub">全54拠点中 / Q3予定</div>
+    <div class="kpi-bar"><div class="kpi-bar-fill prog-blue" style="width:78%"></div></div>
+  </div>
+</div>
+
+<!-- 中段: 進捗リング + 規格別 -->
+<div class="grid-2">
+  <!-- 規格別進捗 -->
+  <div class="card">
+    <div class="section-title"><i class="ti ti-chart-donut" aria-hidden="true" style="font-size:14px;color:var(--blue2)"></i>規格別 監査完了率</div>
+    <div style="display:flex;justify-content:space-around;align-items:center;padding:8px 0">
+      <div class="progress-ring-wrap">
+        <svg width="80" height="80" viewBox="0 0 80 80" role="img" aria-label="ISO 13485 監査完了率 91%">
+          <circle cx="40" cy="40" r="32" fill="none" stroke="#EEEEF4" stroke-width="8"/>
+          <circle cx="40" cy="40" r="32" fill="none" stroke="#197A4B" stroke-width="8" stroke-dasharray="182 201" stroke-dashoffset="50" stroke-linecap="round"/>
+          <text x="40" y="37" text-anchor="middle" font-size="14" font-weight="500" fill="var(--text)" font-family="Anthropic Sans,sans-serif">91%</text>
+          <text x="40" y="51" text-anchor="middle" font-size="9" fill="var(--text3)" font-family="Anthropic Sans,sans-serif">21/23件</text>
+        </svg>
+        <div class="ring-label">ISO 13485</div>
+      </div>
+      <div class="progress-ring-wrap">
+        <svg width="80" height="80" viewBox="0 0 80 80" role="img" aria-label="ISO 9001 監査完了率 82%">
+          <circle cx="40" cy="40" r="32" fill="none" stroke="#EEEEF4" stroke-width="8"/>
+          <circle cx="40" cy="40" r="32" fill="none" stroke="#3460FB" stroke-width="8" stroke-dasharray="165 201" stroke-dashoffset="50" stroke-linecap="round"/>
+          <text x="40" y="37" text-anchor="middle" font-size="14" font-weight="500" fill="var(--text)" font-family="Anthropic Sans,sans-serif">82%</text>
+          <text x="40" y="51" text-anchor="middle" font-size="9" fill="var(--text3)" font-family="Anthropic Sans,sans-serif">5/7件</text>
+        </svg>
+        <div class="ring-label">ISO 9001</div>
+      </div>
+      <div style="flex:1;margin-left:12px">
+        <div style="margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>修理業</span><span style="font-weight:500">89%</span></div>
+          <div class="progress-bar"><div class="progress-fill prog-green" style="width:89%"></div></div>
+        </div>
+        <div style="margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>高度管理販売業</span><span style="font-weight:500">85%</span></div>
+          <div class="progress-bar"><div class="progress-fill prog-blue" style="width:85%"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>据付業</span><span style="font-weight:500">78%</span></div>
+          <div class="progress-bar"><div class="progress-fill prog-amber" style="width:78%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 月次トレンド -->
+  <div class="card">
+    <div class="section-title"><i class="ti ti-chart-line" aria-hidden="true" style="font-size:14px;color:var(--blue2)"></i>月次 実施・指摘件数推移</div>
+    <div class="chart-wrap">
+      <canvas id="trendChart" role="img" aria-label="月次監査実施件数と指摘件数の推移グラフ。4月3件・指摘12、5月4件・指摘18、6月3件・指摘8">4月:実施3,指摘12 / 5月:実施4,指摘18 / 6月:実施3,指摘8</canvas>
+    </div>
+    <div class="legend">
+      <span class="legend-item"><span class="legend-swatch" style="background:#3460FB"></span>実施件数</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:#FE3939"></span>指摘件数</span>
+    </div>
+  </div>
+</div>
+
+<!-- 下段: 直近スケジュール + 未処理アクション -->
+<div class="grid-2">
+  <div class="card">
+    <div class="section-title"><i class="ti ti-calendar" aria-hidden="true" style="font-size:14px;color:var(--blue2)"></i>直近の監査スケジュール</div>
+    <div class="timeline-item">
+      <div class="timeline-icon" style="background:var(--blue3);color:var(--blue)"><i class="ti ti-clipboard-check" aria-hidden="true" style="font-size:14px"></i></div>
+      <div style="flex:1">
+        <div style="display:flex;justify-content:space-between"><span style="font-weight:500">大阪支店 定期監査</span><span class="badge badge-warn">実施中</span></div>
+        <div class="timeline-date">2026/06/10〜06/12 ｜ 担当: 村上・佐藤</div>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-icon" style="background:var(--green2);color:var(--green)"><i class="ti ti-circle-check" aria-hidden="true" style="font-size:14px"></i></div>
+      <div style="flex:1">
+        <div style="display:flex;justify-content:space-between"><span style="font-weight:500">名古屋支店 定期監査</span><span class="badge badge-ok">完了</span></div>
+        <div class="timeline-date">2026/06/05 ｜ 担当: 小林</div>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-icon" style="background:var(--bg3);color:var(--text2)"><i class="ti ti-calendar-event" aria-hidden="true" style="font-size:14px"></i></div>
+      <div style="flex:1">
+        <div style="display:flex;justify-content:space-between"><span style="font-weight:500">福岡支店 定期監査</span><span class="badge badge-gray">予定</span></div>
+        <div class="timeline-date">2026/06/20 ｜ 担当: 井上・石原</div>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-icon" style="background:var(--red2);color:var(--red)"><i class="ti ti-alert-circle" aria-hidden="true" style="font-size:14px"></i></div>
+      <div style="flex:1">
+        <div style="display:flex;justify-content:space-between"><span style="font-weight:500">仙台支店 フォロー監査</span><span class="badge badge-ng">要対応</span></div>
+        <div class="timeline-date">2026/06/25 ｜ CAPA未完了あり</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title"><i class="ti ti-alert-triangle" aria-hidden="true" style="font-size:14px;color:var(--red)"></i>未処理アクション（期限順）</div>
+    <table class="audit-table">
+      <thead>
+        <tr><th>拠点</th><th>指摘内容</th><th>期限</th><th>状態</th></tr>
+      </thead>
+      <tbody>
+        <tr onclick="sendPrompt('仙台支店のCAPAの詳細と対応方針を教えて')"><td>仙台支店</td><td>CAPA有効性確認 未実施</td><td style="color:var(--red);font-weight:500">06/01</td><td><span class="badge badge-ng">超過</span></td></tr>
+        <tr onclick="sendPrompt('札幌支店のサプライヤー評価記録の不備について詳しく教えて')"><td>札幌支店</td><td>サプライヤー評価記録不備</td><td style="color:var(--red);font-weight:500">06/05</td><td><span class="badge badge-ng">超過</span></td></tr>
+        <tr onclick="sendPrompt('横浜支店の教育記録管理の不備について説明して')"><td>横浜支店</td><td>教育記録管理不備</td><td style="color:var(--amber)">06/20</td><td><span class="badge badge-warn">対応中</span></td></tr>
+        <tr onclick="sendPrompt('広島支店のリスクアセスメント更新について教えて')"><td>広島支店</td><td>リスクアセスメント更新</td><td style="color:var(--amber)">06/28</td><td><span class="badge badge-warn">対応中</span></td></tr>
+        <tr onclick="sendPrompt('京都支店の変更管理手順書の不備について教えて')"><td>京都支店</td><td>変更管理手順書不備</td><td>07/10</td><td><span class="badge badge-blue">未着手</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- ========== TAB: 計画・進捗 ========== -->
+<div id="tab-schedule" class="page">
+<div class="filter-row">
+  <span class="filter-label">表示:</span>
+  <select><option>全エリア</option><option>関東</option><option>関西</option><option>中部</option><option>九州</option></select>
+  <select><option>全規格</option><option>ISO 13485</option><option>ISO 9001</option></select>
+</div>
+<div class="card" style="margin-bottom:12px">
+  <div class="section-title"><i class="ti ti-list-check" aria-hidden="true" style="font-size:14px;color:var(--blue2)"></i>年度監査計画 実施状況（2026年度）</div>
+  <table class="audit-table">
+    <thead>
+      <tr><th>監査対象</th><th>規格</th><th>種別</th><th>計画日</th><th>実施日</th><th>担当者</th><th>指摘数</th><th>是正状態</th><th>完了率</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>東京本社</td><td><span class="badge badge-blue">13485</span></td><td>定期</td><td>04/10</td><td>04/10</td><td>髙原</td><td>3件</td><td><span class="badge badge-ok">是正済</span></td><td><div class="progress-bar" style="width:80px"><div class="progress-fill prog-green" style="width:100%"></div></div></td></tr>
+      <tr><td>大阪支店</td><td><span class="badge badge-blue">13485</span></td><td>定期</td><td>06/10</td><td>実施中</td><td>村上・佐藤</td><td>—</td><td><span class="badge badge-warn">進行中</span></td><td><div class="progress-bar" style="width:80px"><div class="progress-fill prog-amber" style="width:60%"></div></div></td></tr>
+      <tr><td>名古屋支店</td><td><span class="badge badge-blue">9001</span></td><td>定期</td><td>06/05</td><td>06/05</td><td>小林</td><td>2件</td><td><span class="badge badge-ok">是正済</span></td><td><div class="progress-bar" style="width:80px"><div class="progress-fill prog-green" style="width:100%"></div></div></td></tr>
+      <tr><td>仙台支店</td><td><span class="badge badge-blue">13485</span></td><td>フォロー</td><td>06/25</td><td>—</td><td>井上</td><td>5件</td><td><span class="badge badge-ng">未完了</span></td><td><div class="progress-bar" style="width:80px"><div class="progress-fill prog-red" style="width:20%"></div></div></td></tr>
+      <tr><td>福岡支店</td><td><span class="badge badge-blue">13485</span></td><td>定期</td><td>06/20</td><td>—</td><td>井上・石原</td><td>—</td><td><span class="badge badge-gray">未実施</span></td><td><div class="progress-bar" style="width:80px"><div class="progress-fill prog-blue" style="width:0%"></div></div></td></tr>
+      <tr><td>札幌支店</td><td><span class="badge badge-blue">9001</span></td><td>定期</td><td>05/15</td><td>05/15</td><td>佐藤</td><td>4件</td><td><span class="badge badge-ng">超過</span></td><td><div class="progress-bar" style="width:80px"><div class="progress-fill prog-red" style="width:35%"></div></div></td></tr>
+      <tr><td>広島支店</td><td><span class="badge badge-blue">13485</span></td><td>定期</td><td>05/20</td><td>05/21</td><td>村上</td><td>1件</td><td><span class="badge badge-warn">対応中</span></td><td><div class="progress-bar" style="width:80px"><div class="progress-fill prog-amber" style="width:70%"></div></div></td></tr>
+    </tbody>
+  </table>
+</div>
+<div class="grid-2">
+  <div class="card">
+    <div class="section-title"><i class="ti ti-users" aria-hidden="true" style="font-size:14px;color:var(--blue2)"></i>担当者別 実施件数</div>
+    <div class="chart-wrap" style="height:140px">
+      <canvas id="assigneeChart" role="img" aria-label="担当者別監査実施件数棒グラフ。髙原5件、村上4件、佐藤4件、小林3件、井上3件、石原2件">髙原:5件 村上:4件 佐藤:4件 小林:3件 井上:3件 石原:2件</canvas>
+    </div>
+  </div>
+  <div class="card">
+    <div class="section-title"><i class="ti ti-calendar-stats" aria-hidden="true" style="font-size:14px;color:var(--blue2)"></i>Q別 実施予定 vs 実績</div>
+    <div class="chart-wrap" style="height:140px">
+      <canvas id="quarterChart" role="img" aria-label="四半期別の監査予定件数と実績件数の比較グラフ">Q1予定8実績8 Q2予定10実績7 Q3予定8未定 Q4予定4未定</canvas>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ========== TAB: 指摘事項 ========== -->
+<div id="tab-findings" class="page">
+<div class="filter-row">
+  <span class="filter-label">絞り込み:</span>
+  <select><option>全分類</option><option>不適合</option><option>観察事項</option><option>改善推奨</option></select>
+  <select><option>全状態</option><option>未着手</option><option>対応中</option><option>完了</option><option>超過</option></select>
+  <select><option>全プロセス</option><option>設計・開発</option><option>購買</option><option>製造・修理</option><option>教育・訓練</option></select>
+</div>
+<div class="grid-3">
+  <div class="kpi">
+    <div class="kpi-label">総指摘件数</div>
+    <div class="kpi-val">75件</div>
+    <div class="kpi-sub">前年度比 −12%</div>
+    <div class="kpi-bar"><div class="kpi-bar-fill prog-blue" style="width:75%"></div></div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">不適合（重大）</div>
+    <div class="kpi-val">8件</div>
+    <div class="kpi-sub">是正完了 5件</div>
+    <div class="kpi-bar"><div class="kpi-bar-fill prog-red" style="width:40%"></div></div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">平均是正日数</div>
+    <div class="kpi-val">18日</div>
+    <div class="kpi-sub">目標 14日 ▲4日</div>
+    <div class="kpi-bar"><div class="kpi-bar-fill prog-amber" style="width:56%"></div></div>
+  </div>
+</div>
+<div class="grid-2">
+  <div class="card">
+    <div class="section-title"><i class="ti ti-chart-bar" aria-hidden="true" style="font-size:14px;color:var(--blue2)"></i>プロセス別 指摘件数</div>
+    <div class="finding-row">
+      <div class="finding-type" style="color:var(--red)">不適合</div>
+      <div class="finding-bar-wrap"><div style="font-size:11px;color:var(--text3);margin-bottom:3px">教育・訓練</div><div class="progress-bar"><div class="progress-fill prog-red" style="width:85%"></div></div></div>
+      <div class="finding-count" style="color:var(--red)">17</div>
+    </div>
+    <div class="finding-row">
+      <div class="finding-type" style="color:var(--amber)">観察事項</div>
+      <div class="finding-bar-wrap"><div style="font-size:11px;color:var(--text3);margin-bottom:3px">購買・サプライヤー管理</div><div class="progress-bar"><div class="progress-fill prog-amber" style="width:65%"></div></div></div>
+      <div class="finding-count" style="color:var(--amber)">13</div>
+    </div>
+    <div class="finding-row">
+      <div class="finding-type" style="color:var(--amber)">観察事項</div>
+      <div class="finding-bar-wrap"><div style="font-size:11px;color:var(--text3);margin-bottom:3px">変更管理</div><div class="progress-bar"><div class="progress-fill prog-amber" style="width:55%"></div></div></div>
+      <div class="finding-count" style="color:var(--amber)">11</div>
+    </div>
+    <div class="finding-row">
+      <div class="finding-type" style="color:var(--blue2)">改善推奨</div>
+      <div class="finding-bar-wrap"><div style="font-size:11px;color:var(--text3);margin-bottom:3px">リスク管理</div><div class="progress-bar"><div class="progress-fill prog-blue" style="width:40%"></div></div></div>
+      <div class="finding-count" style="color:var(--blue2)">8</div>
+    </div>
+    <div class="finding-row">
+      <div class="finding-type" style="color:var(--blue2)">改善推奨</div>
+      <div class="finding-bar-wrap"><div style="font-size:11px;color:var(--text3);margin-bottom:3px">文書管理</div><div class="progress-bar"><div class="progress-fill prog-blue" style="width:30%"></div></div></div>
+      <div class="finding-count" style="color:var(--blue2)">6</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="section-title"><i class="ti ti-chart-bar" aria-hidden="true" style="font-size:14px;color:var(--blue2)"></i>是正状況 × 分類（5年推移）</div>
+    <div class="chart-wrap" style="height:200px">
+      <canvas id="findingTrendChart" role="img" aria-label="5年間の指摘件数推移グラフ。不適合・観察事項・改善推奨の内訳">2022:不適合18,観察22,改善15 / 2023:不適合15,観察20,改善12 / 2024:不適合12,観察19,改善14 / 2025:不適合10,観察18,改善14 / 2026:不適合8,観察16,改善10</canvas>
+    </div>
+    <div class="legend">
+      <span class="legend-item"><span class="legend-swatch" style="background:#FE3939"></span>不適合</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:#A58000"></span>観察事項</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:#3460FB"></span>改善推奨</span>
+    </div>
+  </div>
+</div>
+<div class="card">
+  <div class="section-title"><i class="ti ti-list" aria-hidden="true" style="font-size:14px;color:var(--blue2)"></i>指摘事項一覧（最新）</div>
+  <table class="audit-table">
+    <thead><tr><th>#</th><th>拠点</th><th>ISO条項</th><th>分類</th><th>指摘内容</th><th>是正期限</th><th>担当</th><th>状態</th></tr></thead>
+    <tbody>
+      <tr onclick="sendPrompt('仙台支店 条項8.5.2のCAPAについて是正方針を提案して')"><td style="color:var(--text3)">F-075</td><td>仙台支店</td><td>8.5.2</td><td><span class="badge badge-ng">不適合</span></td><td>CAPA有効性確認未実施</td><td style="color:var(--red);font-weight:500">2026/06/01</td><td>井上</td><td><span class="badge badge-ng">超過</span></td></tr>
+      <tr onclick="sendPrompt('札幌支店のサプライヤー評価 条項7.4の是正手順を教えて')"><td style="color:var(--text3)">F-074</td><td>札幌支店</td><td>7.4</td><td><span class="badge badge-ng">不適合</span></td><td>サプライヤー評価記録不備</td><td style="color:var(--red);font-weight:500">2026/06/05</td><td>佐藤</td><td><span class="badge badge-ng">超過</span></td></tr>
+      <tr onclick="sendPrompt('横浜支店の教育記録管理 条項6.2の改善方針を提案して')"><td style="color:var(--text3)">F-073</td><td>横浜支店</td><td>6.2</td><td><span class="badge badge-warn">観察事項</span></td><td>教育記録管理不備</td><td style="color:var(--amber)">2026/06/20</td><td>村上</td><td><span class="badge badge-warn">対応中</span></td></tr>
+      <tr onclick="sendPrompt('広島支店のリスクアセスメント 条項7.1の更新手順を教えて')"><td style="color:var(--text3)">F-072</td><td>広島支店</td><td>7.1</td><td><span class="badge badge-warn">観察事項</span></td><td>リスクアセスメント更新遅延</td><td style="color:var(--amber)">2026/06/28</td><td>村上</td><td><span class="badge badge-warn">対応中</span></td></tr>
+      <tr onclick="sendPrompt('京都支店の変更管理 条項4.2の手順書不備について対応策を提案して')"><td style="color:var(--text3)">F-071</td><td>京都支店</td><td>4.2</td><td><span class="badge badge-blue">改善推奨</span></td><td>変更管理手順書不備</td><td>2026/07/10</td><td>石原</td><td><span class="badge badge-blue">未着手</span></td></tr>
+    </tbody>
+  </table>
+</div>
+</div>
+
+<!-- ========== TAB: 拠点別 ========== -->
+<div id="tab-branch" class="page">
+<div class="filter-row">
+  <span class="filter-label">エリア:</span>
+  <select><option>全エリア</option><option>関東</option><option>関西</option><option>中部</option><option>東北</option><option>北海道</option><option>九州</option></select>
+  <span class="filter-label" style="margin-left:8px">表示:</span>
+  <select><option>ヒートマップ</option><option>一覧</option></select>
+</div>
+<div class="card" style="margin-bottom:12px">
+  <div class="section-title"><i class="ti ti-map" aria-hidden="true" style="font-size:14px;color:var(--blue2)"></i>拠点別 監査状況ヒートマップ（54拠点）</div>
+  <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap">
+    <span class="legend-item" style="font-size:11px"><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#197A4B;margin-right:3px;vertical-align:middle"></span>完了・是正済</span>
+    <span class="legend-item" style="font-size:11px"><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#A58000;margin-right:3px;vertical-align:middle"></span>対応中</span>
+    <span class="legend-item" style="font-size:11px"><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#FE3939;margin-right:3px;vertical-align:middle"></span>超過・要対応</span>
+    <span class="legend-item" style="font-size:11px"><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#3460FB;margin-right:3px;vertical-align:middle"></span>未実施（予定内）</span>
+    <span class="legend-item" style="font-size:11px"><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#CCCCDD;margin-right:3px;vertical-align:middle"></span>計画外（今期対象外）</span>
+  </div>
+  <div id="heatmap" class="mini-grid" style="grid-template-columns:repeat(9,1fr)"></div>
+  <div style="font-size:11px;color:var(--text3);margin-top:6px">※ セルをクリックすると詳細をClaude に質問できます</div>
+</div>
+<div class="card">
+  <div class="section-title"><i class="ti ti-building" aria-hidden="true" style="font-size:14px;color:var(--blue2)"></i>拠点別 指摘件数・是正率</div>
+  <div class="chart-wrap" style="height:220px">
+    <canvas id="branchChart" role="img" aria-label="拠点別の指摘件数と是正率を示す棒グラフ">仙台:指摘5,是正率20% / 札幌:指摘4,是正率35% / 横浜:指摘3,是正率60% / 広島:指摘2,是正率70% / 東京:指摘3,是正率100%</canvas>
+  </div>
+</div>
+</div>
+
+<div class="data-upd">データ最終更新: 2026-06-12 09:00 ｜ <span style="cursor:pointer;color:var(--blue2)" onclick="sendPrompt('監査データの更新方法とPower Automateとの連携設定について教えて')">更新設定 <i class="ti ti-settings" aria-hidden="true" style="font-size:12px"></i></span></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+function showTab(id){
+  document.querySelectorAll('.tab').forEach((t,i)=>{
+    const ids=['overview','schedule','findings','branch'];
+    t.classList.toggle('active',ids[i]===id);
+  });
+  document.querySelectorAll('.page').forEach(p=>{p.classList.remove('active')});
+  document.getElementById('tab-'+id).classList.add('active');
+  if(id==='overview')initTrendChart();
+  if(id==='schedule')initAssigneeChart();
+  if(id==='findings')initFindingCharts();
+  if(id==='branch'){initBranchChart();initHeatmap();}
+}
+
+const isDark=matchMedia('(prefers-color-scheme:dark)').matches;
+const textCol=isDark?'#9090AA':'#5A5A72';
+const gridCol=isDark?'rgba(255,255,255,.06)':'rgba(0,0,96,.06)';
+const baseOpts={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:gridCol},ticks:{color:textCol,font:{size:11}}},y:{grid:{color:gridCol},ticks:{color:textCol,font:{size:11}}}}};
+
+function initTrendChart(){
+  const el=document.getElementById('trendChart');
+  if(el._init)return; el._init=true;
+  new Chart(el,{type:'bar',data:{
+    labels:['4月','5月','6月','7月','8月','9月','10月','11月','12月','1月','2月','3月'],
+    datasets:[
+      {label:'実施件数',data:[3,4,3,null,null,null,null,null,null,null,null,null],backgroundColor:'#3460FB',borderRadius:3},
+      {label:'指摘件数',data:[12,18,8,null,null,null,null,null,null,null,null,null],type:'line',borderColor:'#FE3939',backgroundColor:'rgba(254,57,57,.1)',tension:.3,pointRadius:3,fill:true,yAxisID:'y1'}
+    ]
+  },options:{...baseOpts,scales:{...baseOpts.scales,y1:{position:'right',grid:{drawOnChartArea:false},ticks:{color:textCol,font:{size:11}}}}}});
+}
+
+function initAssigneeChart(){
+  const el=document.getElementById('assigneeChart');
+  if(el._init)return; el._init=true;
+  new Chart(el,{type:'bar',data:{
+    labels:['髙原','村上','佐藤','小林','井上','石原'],
+    datasets:[{label:'実施件数',data:[5,4,4,3,3,2],backgroundColor:'#3460FB',borderRadius:3}]
+  },options:{...baseOpts,indexAxis:'y',scales:{x:{...baseOpts.scales.x},y:{...baseOpts.scales.y,ticks:{...baseOpts.scales.y.ticks,font:{size:12}}}}}});
+  const el2=document.getElementById('quarterChart');
+  if(el2._init)return; el2._init=true;
+  new Chart(el2,{type:'bar',data:{
+    labels:['Q1','Q2','Q3','Q4'],
+    datasets:[
+      {label:'計画',data:[8,10,8,4],backgroundColor:'rgba(52,96,251,.25)',borderRadius:3},
+      {label:'実績',data:[8,7,null,null],backgroundColor:'#3460FB',borderRadius:3}
+    ]
+  },options:{...baseOpts,plugins:{legend:{display:false}}}});
+}
+
+function initFindingCharts(){
+  const el=document.getElementById('findingTrendChart');
+  if(el._init)return; el._init=true;
+  new Chart(el,{type:'bar',data:{
+    labels:['2022','2023','2024','2025','2026'],
+    datasets:[
+      {label:'不適合',data:[18,15,12,10,8],backgroundColor:'#FE3939',borderRadius:2},
+      {label:'観察事項',data:[22,20,19,18,16],backgroundColor:'#A58000',borderRadius:2},
+      {label:'改善推奨',data:[15,12,14,14,10],backgroundColor:'#3460FB',borderRadius:2}
+    ]
+  },options:{...baseOpts,plugins:{legend:{display:false}},scales:{...baseOpts.scales,x:{...baseOpts.scales.x,stacked:true},y:{...baseOpts.scales.y,stacked:true}}}});
+}
+
+function initBranchChart(){
+  const el=document.getElementById('branchChart');
+  if(el._init)return; el._init=true;
+  new Chart(el,{type:'bar',data:{
+    labels:['仙台','札幌','横浜','広島','名古屋','大阪','福岡','京都','東京'],
+    datasets:[
+      {label:'指摘件数',data:[5,4,3,2,2,null,null,1,3],backgroundColor:'rgba(254,57,57,.7)',borderRadius:3},
+      {label:'是正率(%)',data:[20,35,60,70,100,null,null,0,100],type:'line',borderColor:'#197A4B',backgroundColor:'transparent',tension:.3,pointRadius:4,yAxisID:'y1'}
+    ]
+  },options:{...baseOpts,scales:{...baseOpts.scales,y1:{position:'right',grid:{drawOnChartArea:false},ticks:{color:textCol,font:{size:11},callback:v=>v+'%'}}}}});
+}
+
+function initHeatmap(){
+  const hm=document.getElementById('heatmap');
+  if(hm.children.length>0)return;
+  const statuses=[
+    {s:'ok',n:'東京1'},{s:'ok',n:'東京2'},{s:'ok',n:'東京3'},{s:'ok',n:'新宿'},{s:'ok',n:'渋谷'},
+    {s:'warn',n:'横浜'},{s:'ok',n:'川崎'},{s:'ok',n:'千葉'},{s:'ok',n:'埼玉1'},
+    {s:'ok',n:'埼玉2'},{s:'warn',n:'大阪1'},{s:'warn',n:'大阪2'},{s:'ok',n:'神戸'},{s:'ok',n:'京都'},
+    {s:'warn',n:'名古屋1'},{s:'ok',n:'名古屋2'},{s:'ok',n:'岐阜'},{s:'blue',n:'静岡'},
+    {s:'blue',n:'浜松'},{s:'ok',n:'福岡1'},{s:'ok',n:'福岡2'},{s:'blue',n:'熊本'},{s:'blue',n:'鹿児島'},
+    {s:'red',n:'仙台'},{s:'red',n:'札幌'},{s:'blue',n:'旭川'},{s:'ok',n:'盛岡'},{s:'ok',n:'秋田'},
+    {s:'ok',n:'山形'},{s:'ok',n:'福島'},{s:'ok',n:'宇都宮'},{s:'ok',n:'前橋'},{s:'blue',n:'長野'},
+    {s:'blue',n:'松本'},{s:'ok',n:'金沢'},{s:'ok',n:'富山'},{s:'ok',n:'福井'},{s:'ok',n:'広島'},
+    {s:'ok',n:'岡山'},{s:'ok',n:'高松'},{s:'ok',n:'松山'},{s:'ok',n:'高知'},{s:'ok',n:'徳島'},
+    {s:'gray',n:'鳥取'},{s:'gray',n:'島根'},{s:'ok',n:'山口'},{s:'ok',n:'長崎'},{s:'ok',n:'佐賀'},
+    {s:'ok',n:'大分'},{s:'blue',n:'宮崎'},{s:'ok',n:'那覇'},{s:'gray',n:'石垣'},{s:'ok',n:'鹿屋'}
+  ];
+  const colors={ok:'#197A4B',warn:'#A58000',red:'#FE3939',blue:'#3460FB',gray:'#BBBBCC'};
+  statuses.forEach(b=>{
+    const d=document.createElement('div');
+    d.className='mini-cell';
+    d.style.background=colors[b.s];
+    d.style.fontSize='9px';
+    d.title=b.n;
+    d.textContent=b.n.length>3?b.n.substring(0,3):b.n;
+    d.onclick=()=>sendPrompt(b.n+'支店の監査状況と未処理指摘事項の詳細を教えて');
+    hm.appendChild(d);
+  });
+}
+
+document.addEventListener('DOMContentLoaded',()=>{initTrendChart();});
+setTimeout(()=>{initTrendChart();},300);
+</script>
